@@ -1,0 +1,22 @@
+@startuml
+autonumber
+
+actor Admin as "Admin"
+participant Backend as "Backend Service"
+database DB as "Database"
+
+== Update Location Rack Flow ==
+Admin -> Backend: Request to update location rack by ID
+Backend -> DB: Find location rack by ID
+alt ["location rack exists"]
+    DB -> Backend: Return location rack entity
+    Backend -> Backend: Map request data to location rack entity
+    Backend -> Backend: Set updatedBy and updatedDate
+    Backend -> DB: Save updated location rack
+    Backend -> Backend: Map updated entity to LocationRackResponse
+    Backend -> Admin: Return updated location rack data
+else ["location rack not found"]
+    DB -> Backend: Return empty result
+    Backend -> Admin: error: LOCATION_RACK_NOT_EXIST
+end
+@enduml

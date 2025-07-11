@@ -1,0 +1,17 @@
+@startuml
+autonumber
+
+actor User as "User"
+participant Backend as "Backend Service"
+database DB as "Database"
+
+== Get Inventory Flow ==
+User -> Backend: Request inventory data
+Backend -> Backend: Create search criteria based on request
+Backend -> DB: Query inventory data
+DB -> Backend: Return inventory results
+
+Backend -> Backend: Convert results to DTOs
+Backend -> User: Send inventory data response
+
+@enduml

@@ -1,0 +1,24 @@
+@startuml
+autonumber
+
+actor Admin as "Admin"
+participant Backend as "Backend Service"
+database DB as "Database"
+
+== Delete Supplier Flow ==
+Admin -> Backend: Request to delete supplier
+Backend -> DB: Find supplier by ID
+alt ["Supplier exists"]
+    DB -> Backend: Return supplier
+    Backend -> DB: Check if supplier is being used
+    alt ["Supplier is being used"]
+        Backend -> Admin: Supplier is being used error
+    else
+        DB -> Backend: Delete supplier
+        Backend -> Admin: Return success response
+    end
+else
+    DB -> Backend: Supplier not found
+    Backend -> Admin: Supplier not exist error
+end
+@enduml

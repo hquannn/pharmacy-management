@@ -1,0 +1,15 @@
+@startuml
+autonumber
+
+actor Employee as "Employee"
+participant Backend as "Backend Service"
+database DB as "Database"
+
+== Fetch Medicines Flow ==
+Employee -> Backend: Get medicines request with filters and pagination
+Backend -> Backend: Build specification from filters (name, category, quantity)
+Backend -> DB: Query medicines with specification and pageable
+DB -> Backend: Return paginated medicines list
+Backend -> Backend: Map medicines to MedicineResponse list
+Backend -> Employee: Return medicines with pagination info
+@enduml

@@ -1,0 +1,31 @@
+@startuml
+autonumber
+
+actor Customer as "Customer"
+actor Employee as "Employee"
+participant Backend as "Backend Service"
+database DB as "Database"
+
+== Refund Flow ==
+Employee -> Backend: Request to refund (RefundRequest)
+Backend -> Backend: Generate sale code (saleCode)
+
+Backend -> DB: Find inventory by ID (request.refundItemId)
+alt Inventory exists
+    DB -> Backend: Return inventory data
+    Backend -> Backend: Update inventory quantity
+    Backend -> DB: Save updated inventory
+
+    Backend -> Backend: Calculate refund amount
+    Backend -> Backend: Set refundAmountAtomic and refundItemId
+
+    Backend -> Backend: Build RefundResponse
+    Backend -> Employee: Return RefundResponse
+else Inventory not found
+    Backend -> Backend: Throw INVENTORY_NOT_EXIST error
+end
+
+Backend -> Backend: Build SaleLog
+Backend -> DB: Save SaleLog
+
+@enduml

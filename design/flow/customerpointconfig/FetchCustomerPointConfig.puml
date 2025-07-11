@@ -1,0 +1,17 @@
+@startuml
+autonumber
+
+actor Admin as "Admin"
+participant Backend as "Backend Service"
+database DB as "DB"
+
+== Get Customer Point Config Flow ==
+Admin -> Backend: Request to view customer point configuration
+Backend -> DB: Look for customer point configuration
+DB -> Backend: Send back customer point configuration details
+
+Backend -> Backend: Take the first customer point configuration
+Backend -> Backend: Prepare the response for the Admin
+Backend -> Admin: Send the customer point configuration details
+
+@enduml

@@ -1,0 +1,15 @@
+@startuml
+autonumber
+
+actor Admin as "Admin"
+participant Backend as "Backend Service"
+database DB as "Database"
+
+== Get Location Racks Flow ==
+Admin -> Backend: Request to get location racks with filters
+Backend -> Backend: Build Specification based on position filter
+Backend -> DB: Query LocationRack records with Specification and Pageable
+DB -> Backend: Return paginated LocationRack records
+Backend -> Backend: Map LocationRack entities to LocationRackResponse list
+Backend -> Admin: Return CommonGetResponse with location racks data
+@enduml

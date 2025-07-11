@@ -1,0 +1,27 @@
+@startuml
+autonumber
+
+actor Admin as "Admin"
+participant Backend as "Backend Service"
+database DB as "Database"
+
+== Delete Medicine Flow ==
+Admin -> Backend: Delete medicine request with medicineId
+Backend -> DB: Find medicine by medicineId
+alt ["medicine not found"]
+    DB -> Backend: medicine not found
+    Backend -> Admin: Error: MEDICINE_NOT_EXIST
+else
+    DB -> Backend: medicine found
+    Backend -> DB: Check if medicine is referenced in purchase records
+    alt ["medicine is in use"]
+        DB -> Backend: Reference exists
+        Backend -> Admin: Error: MED_IS_BEING_USED
+    else
+        DB -> Backend: No references found
+        Backend -> DB: Delete medicine record
+        DB -> Backend: delete success
+        Backend -> Admin: Medicine delete success
+    end
+end
+@enduml

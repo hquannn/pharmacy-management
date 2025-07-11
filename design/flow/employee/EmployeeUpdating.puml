@@ -1,0 +1,22 @@
+@startuml
+autonumber
+
+actor Admin as "Admin"
+participant Backend as "Backend Service"
+database DB as "Database"
+
+== Employee Updating Flow ==
+Admin -> Backend: Employee update request
+Backend -> DB: Fetch employee by id
+alt [employee not exists]
+    DB -> Backend: not found
+    Backend -> Admin: employee is not exist
+else [employee exist]
+    DB -> Backend: employee
+    Backend -> Backend: map employee
+    Backend -> DB: update
+    DB -> Backend: updated
+    Backend -> Admin: updated success
+end
+@enduml
+

@@ -1,0 +1,25 @@
+@startuml
+autonumber
+
+actor Employee as "Employee"
+participant Backend as "Backend Service"
+database DB as "Database"
+
+== Get Profit Per Day Flow ==
+Employee -> Backend: Request to get profit per day (ProfitPerDayRequest)
+Backend -> Backend: Determine date for profit calculation
+alt date provided
+    Backend -> Backend: Use provided date
+else no date provided
+    Backend -> Backend: Use current date
+end
+
+Backend -> Backend: Create startOfDay and endOfDay timestamps
+Backend -> Backend: Create Specification for SaleLogs with date range
+Backend -> DB: Query SaleLogs with Specification
+DB -> Backend: Return List<SaleLog> results
+
+Backend -> Backend: Calculate total profit using stream
+Backend -> Employee: Return ProfitPerDayResponse
+
+@enduml

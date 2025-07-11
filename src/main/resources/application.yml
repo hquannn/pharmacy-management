@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: pharmacy
+  profiles:
+    active: dev
+  jackson:
+    serialization:
+      WRITE_BIGDECIMAL_AS_PLAIN: true
+
+server:
+  servlet:
+    context-path: /pharmacy
+
+keycloak:
+  auth-server-url: "${KEY_CLOAK_AUTH_SERVER_URL:http://localhost:9090}"
+  realm: pharmacy-management
+  client-id: admin-cli
+  # admin user should be assigned realm-management (manage-users)
+  username: 9f89331d-9257-44e3-9a69-c7b6f792a983
+  password: a36288fb-8eb8-45a9-8f6e-90bb639403a4
+  grant-type: password

@@ -1,0 +1,45 @@
+@startuml
+autonumber
+
+actor Admin as "Admin"
+participant Backend as "Backend Service"
+database DB as "Database"
+
+== Update Purchase Flow ==
+Admin -> Backend: Request to update purchase (purchaseId, request)
+Backend -> DB: Find purchase by ID
+DB -> Backend: Return purchase data
+Backend -> Backend: Check if medicine ID needs updating
+alt Update medicine ID
+    Backend -> DB: Find current inventory
+    DB -> Backend: Return inventory
+    alt Inventory exists
+        Backend -> DB: Decrease inventory quantity
+        DB -> Backend: Confirm inventory update
+    else Inventory does not exist
+        Backend -> Backend: Continue without updating inventory
+    end
+    Backend -> DB: Find new medicine by ID
+    DB -> Backend: Return medicine data
+    alt Medicine exists
+        Backend -> Backend: Update purchase medicine
+    else Medicine does not exist
+        Backend -> Backend: Throw MEDICINE_NOT_EXIST error
+    end
+    Backend -> Backend: Save inventory for new medicine
+end
+alt Update supplier ID
+    Backend -> DB: Find supplier by ID
+    DB -> Backend: Return supplier data
+    alt Supplier exists
+        Backend -> Backend: Update purchase supplier
+    else Supplier does not exist
+        Backend -> Backend: Throw SUPPLIER_NOT_EXIST error
+    end
+end
+Backend -> Backend: Map request to purchase entity
+Backend -> DB: Save updated purchase
+DB -> Backend: Confirm purchase update
+Backend -> Backend: Map updated purchase to response
+Backend -> Admin: Return updated purchase response
+@enduml

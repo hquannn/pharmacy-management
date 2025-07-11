@@ -1,0 +1,19 @@
+@startuml
+autonumber
+
+actor Employee as "Employee"
+participant Backend as "Backend Service"
+database DB as "Database"
+
+== Customer Creation Flow ==
+Employee -> Backend: Customer creation request
+Backend -> DB: save
+alt ["phone no exists"]
+    DB -> Backend: duplicate unique constraint
+    Backend -> Employee: phone no exists
+else
+    DB -> Backend: save success
+    Backend -> Employee: success
+end
+@enduml
+

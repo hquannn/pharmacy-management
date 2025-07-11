@@ -1,0 +1,26 @@
+@startuml
+autonumber
+
+actor Admin as "Admin"
+participant Backend as "Backend Service"
+database DB as "Database"
+
+== Delete Location Rack Flow ==
+Admin -> Backend: Request to delete location rack by ID
+Backend -> DB: Find location rack by ID
+alt ["location rack exists"]
+    DB -> Backend: Return location rack entity
+    Backend -> DB: Check if inventory exists by locationRackId
+    alt ["location rack is being used"]
+        DB -> Backend: Inventory record exists
+        Backend -> Admin: Throw CustomResponseException (LOCATION_RACK_IS_BEING_USED)
+    else ["location rack is not used"]
+        DB -> Backend: No inventory record exists
+        Backend -> DB: Delete location rack
+        Backend -> Admin: Return success response with deleted locationRackId
+    end
+else ["location rack not found"]
+    DB -> Backend: Return empty result
+    Backend -> Admin: Throw CustomResponseException (LOCATION_RACK_NOT_EXIST)
+end
+@enduml

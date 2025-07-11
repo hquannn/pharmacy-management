@@ -1,0 +1,46 @@
+@startuml
+autonumber
+
+actor Customer as "Customer"
+actor Employee as "Employee"
+participant Backend as "Backend Service"
+database DB as "Database"
+
+== Create Sale Flow ==
+Employee -> Backend: Request to create sale (CreateSaleRequest)
+Backend -> Backend: Get current time (now)
+Backend -> Backend: Map CreateSaleRequest to Sale entity
+Backend -> Backend: Map saleItems to SaleItem list
+
+alt Customer ID provided
+    Backend -> DB: Find customer by ID
+    DB -> Backend: Return customer data
+    alt Use points
+        Backend -> Backend: Deduct points from totalAmount
+        Backend -> Backend: Set customer points to 0
+    else Not using points
+        Backend -> Backend: Calculate and update customer points
+    end
+    Backend -> DB: Save updated customer
+end
+
+Backend -> Backend: Calculate totalAmount
+Backend -> DB: Save sale entity
+
+Backend -> Backend: Prepare inventory request map
+Backend -> DB: Find inventory by IDs
+DB -> Backend: Return inventory data
+
+alt Inventory exists
+    Backend -> Backend: Update inventory quantities
+    Backend -> DB: Save updated inventory
+else Inventory not found
+    Backend -> Backend: Throw INVENTORY_NOT_EXIST error
+end
+
+Backend -> DB: Generate sale code
+Backend -> DB: Log sale in SaleLog
+
+Backend -> Backend: Map Sale entity to SaleResponse
+Backend -> Employee: Return SaleResponse with sale details
+@enduml

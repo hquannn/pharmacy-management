@@ -1,0 +1,22 @@
+@startuml
+autonumber
+
+actor Admin as "Admin"
+participant Backend as "Backend Service"
+database DB as "Database"
+
+== Update Medicine Flow ==
+Admin -> Backend: Update medicine request with medicineId
+Backend -> DB: Find medicine by medicineId
+alt ["medicine not found"]
+    DB -> Backend: medicine not found
+    Backend -> Admin: Error: MEDICINE_NOT_EXIST
+else
+    DB -> Backend: medicine found
+    Backend -> Backend: Map UpdateMedicineRequest to existing Medicine entity
+    Backend -> Backend: Set updated_by and updated_date
+    Backend -> DB: Save updated medicine
+    DB -> Backend: save success
+    Backend -> Admin: Medicine update success
+end
+@enduml

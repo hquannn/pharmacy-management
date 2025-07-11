@@ -1,0 +1,32 @@
+@startuml
+autonumber
+
+actor Admin as "Admin"
+participant Backend as "Backend Service"
+participant Keycloak as "Keycloak (Identity Provider)"
+database DB as "Database"
+
+== Employee Deleting Flow ==
+Admin -> Backend: Employee creation request
+Backend -> Keycloak: delete user
+alt ["User not exist"]
+    Keycloak -> Backend: user not found
+    Backend -> Admin: employee is not exist
+else ["Other errors"]
+    Keycloak -> Backend: general error
+    Backend -> Admin: general error
+else ["employee exist"]
+    Keycloak -> Backend: delete success
+    Backend -> DB: Fetch employee by id
+    alt ["user not exist"]
+        DB -> Backend: not found
+        Backend -> Admin: employee not exist
+    else ["employee exist in db"]
+        DB -> Backend: employee
+        Backend -> DB: delete employee
+        DB -> Backend: deleted
+        Backend -> Admin: delete success
+    end
+end
+@enduml
+

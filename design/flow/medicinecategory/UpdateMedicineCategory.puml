@@ -1,0 +1,20 @@
+@startuml
+autonumber
+
+actor Admin as "Admin"
+participant Backend as "Backend Service"
+database DB as "Database"
+
+== Update Medicine Category Flow ==
+Admin -> Backend: Request to update medicine category
+Backend -> DB: Check if medicine category exists
+alt ["medicine category exists"]
+    DB -> Backend: Return medicine category
+    Backend -> DB: Update medicine category with new data
+    DB -> Backend: Save success
+    Backend -> Admin: Return success response with updated medicine category data
+else
+    DB -> Backend: Return category not exist error
+    Backend -> Admin: Return error response
+end
+@enduml

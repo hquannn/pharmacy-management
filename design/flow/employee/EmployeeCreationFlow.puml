@@ -1,0 +1,26 @@
+@startuml
+autonumber
+
+actor Admin as "Admin"
+participant Backend as "Backend Service"
+participant Keycloak as "Keycloak (Identity Provider)"
+database DB as "Database"
+
+== Employee Creation Flow ==
+Admin -> Backend: Employee creation request
+Backend --> Keycloak: Create user
+alt ["User exists"]
+    Keycloak -> Backend: User already exists
+    Backend -> Admin: Notify user exists
+else ["Error case"]
+    Keycloak -> Backend: General error occurred
+    Backend -> Admin: Notify error
+else ["Success case"]
+    Keycloak -> Keycloak: Create user and assign role
+    Keycloak --> Backend: Return employeeId
+    Backend --> DB: Save employee details
+    DB -> Backend: Save successful
+    Backend -> Admin: Employee created successfully
+end
+@enduml
+

@@ -1,0 +1,15 @@
+@startuml
+autonumber
+
+actor Employee as "Employee"
+participant Backend as "Backend Service"
+database DB as "Database"
+
+== Create Location Rack Flow ==
+Employee -> Backend: Create location rack request with details
+Backend -> Backend: Map request to LocationRack entity
+Backend -> DB: Save LocationRack to database
+DB -> Backend: Save success
+Backend -> Backend: Map LocationRack entity to LocationRackResponse
+Backend -> Employee: Success with LocationRackResponse
+@enduml

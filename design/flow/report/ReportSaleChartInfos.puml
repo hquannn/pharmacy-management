@@ -1,0 +1,25 @@
+@startuml
+autonumber
+
+actor Employee as "Employee"
+participant Backend as "Backend Service"
+database DB as "Database"
+
+== Get Sale Chart Info Flow ==
+Employee -> Backend: Request sale chart information
+Backend -> Backend: Define start and end of the year
+Backend -> Backend: Create query for sales data by date range
+Backend -> DB: Fetch sales data from database
+DB -> Backend: Return list of sales records
+
+Backend -> Backend: Group sales records by month
+Backend -> Backend: Prepare response for each month
+alt Process sales records
+    Backend -> Backend: Set initial refund and sale amounts and counts
+    Backend -> Backend: Go through each sales record
+    Backend -> Backend: Update amounts and counts based on type of sale
+end
+Backend -> Backend: Create response list for sale chart info
+Backend -> Employee: Send sale chart information back
+
+@enduml

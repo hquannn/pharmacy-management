@@ -1,0 +1,13 @@
+@startuml
+autonumber
+
+actor Admin as "Admin"
+participant Backend as "Backend Service"
+database DB as "Database"
+
+== Create Medicine Category Flow ==
+Admin -> Backend: Request to create medicine category
+Backend -> DB: Save medicine category entity
+DB -> Backend: Return saved medicine category entity
+Backend -> Admin: Return success response with medicine category details
+@enduml

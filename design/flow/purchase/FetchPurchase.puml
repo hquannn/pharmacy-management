@@ -1,0 +1,15 @@
+@startuml
+autonumber
+
+actor Admin as "Admin"
+participant Backend as "Backend Service"
+database DB as "Database"
+
+== Get Purchases Flow ==
+Admin -> Backend: Request to get purchases
+Backend -> Backend: Create specification with filters
+Backend -> DB: Query purchases with specification
+DB -> Backend: Return purchase data
+Backend -> Backend: Map purchase data to response format
+Backend -> Admin: Return paginated purchase response
+@enduml

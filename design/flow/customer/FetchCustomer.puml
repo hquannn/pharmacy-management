@@ -1,0 +1,14 @@
+@startuml
+autonumber
+
+actor Employee as "Employee"
+participant Backend as "Backend Service"
+database DB as "Database"
+
+== Customer Fetching Flow ==
+Employee -> Backend: Fetch customers request
+Backend -> DB: select
+DB -> Backend: list of customers
+Backend -> Employee: list of customers
+@enduml
+

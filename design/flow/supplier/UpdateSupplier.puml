@@ -1,0 +1,22 @@
+@startuml
+autonumber
+
+actor Admin as "Admin"
+participant Backend as "Backend Service"
+database DB as "Database"
+
+== Update Supplier Flow ==
+Admin -> Backend: Request to update supplier
+Backend -> DB: Find supplier by ID
+alt ["Supplier exists"]
+    DB -> Backend: Return supplier
+    Backend -> DB: Update supplier details
+    DB -> Backend: Save updated supplier
+    Backend -> DB: Retrieve updated supplier
+    DB -> Backend: Return updated supplier
+    Backend -> Admin: Return updated supplier response
+else
+    DB -> Backend: Supplier not found
+    Backend -> Admin: Supplier not exist error
+end
+@enduml

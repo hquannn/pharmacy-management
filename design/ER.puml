@@ -1,0 +1,93 @@
+@startuml
+left to right direction
+skinparam class {
+    BackgroundColor White
+    ArrowColor Navy
+    BorderColor Black
+    FontSize 14
+    FontColor DarkSlateGray
+}
+
+entity "ADMIN" as Admin {
+  + A_Username
+  + A_Password
+}
+
+entity "EMPLOGIN" as EmpLogin {
+  + E_Username
+  + E_Password
+}
+
+entity "EMPLOYEE" as Employee {
+  + E_ID
+  + E_Fname
+  + E_Lname
+  + E_Sex
+  + E_Jdate
+  + E_Age
+  + E_Add
+  + E_Phno
+  + E_Mail
+  + E_Sal
+  + E_Type
+  + Bdate
+}
+
+entity "SUPPLIER" as Suppliers {
+  + Sup_ID
+  + Sup_Name
+  + Sup_Add
+  + Sup_Phno
+  + Sup_Mail
+}
+
+entity "CUSTOMER" as Customer {
+  + C_ID
+  + C_Fname
+  + C_Lname
+  + C_Age
+  + C_Sex
+  + C_Phno
+  + C_Mail
+}
+
+entity "MED" as Meds {
+  + Med_ID
+  + Med_Name
+  + Med_Price
+  + Category
+}
+
+entity "PURCHASE" as Purchase {
+  + P_ID
+  + P_Qty
+  + P_Cost
+  + Exp_Date
+  + Pur_Date
+  + Mfg_Date
+}
+
+entity "SALE" as Sales {
+  + Sale_ID
+  + S_Time
+  + S_Date
+  + Total_Amt
+}
+
+entity "SALE_ITEM" as SalesItems {
+  + Sale_Qty
+  + Tot_Price
+}
+
+Admin --|> EmpLogin : UNDER
+EmpLogin --|> Employee : UNDER
+Employee --|> Sales : DONE BY
+Employee -- Suppliers : UNDER
+Sales --|> SalesItems
+SalesItems --|> Meds : Sale_Qty
+SalesItems --|> Sales : Tot_Price
+Meds --|> Purchase : Med_Qty
+Suppliers --|> Purchase : Sup_ID
+Sales --|> Customer : SOLD TO
+
+@enduml

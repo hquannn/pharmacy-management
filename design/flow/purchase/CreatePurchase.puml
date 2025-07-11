@@ -1,0 +1,31 @@
+@startuml
+autonumber
+
+actor Admin as "Admin"
+participant Backend as "Backend Service"
+database DB as "Database"
+
+== Create Purchase Flow ==
+Admin -> Backend: Request to create purchase
+Backend -> DB: Find medicine by ID
+alt ["Medicine exists"]
+    DB -> Backend: Return medicine
+    Backend -> DB: Find supplier by ID
+    alt ["Supplier exists"]
+        DB -> Backend: Return supplier
+        Backend -> Backend: Map request to Purchase entity
+        Backend -> Backend: Set createdBy and createdDate
+        Backend -> Backend: Generate purchase code
+        Backend -> Backend: Save inventory
+        Backend -> DB: Save purchase
+        DB -> Backend: Confirm purchase saved
+        Backend -> Admin: Return success response with purchase details
+    else
+        DB -> Backend: Supplier not found
+        Backend -> Admin: Supplier does not exist error
+    end
+else
+    DB -> Backend: Medicine not found
+    Backend -> Admin: Medicine does not exist error
+end
+@enduml

@@ -1,0 +1,15 @@
+@startuml
+autonumber
+
+actor Admin as "Admin"
+participant Backend as "Backend Service"
+database DB as "Database"
+
+== Get Suppliers Flow ==
+Admin -> Backend: Request to get suppliers
+Backend -> DB: Query suppliers with filter criteria
+DB -> Backend: Return suppliers page
+Backend -> DB: Retrieve suppliers content
+DB -> Backend: Return supplier content
+Backend -> Admin: Return suppliers response
+@enduml

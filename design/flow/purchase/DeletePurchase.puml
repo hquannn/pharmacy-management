@@ -1,0 +1,20 @@
+@startuml
+autonumber
+
+actor Admin as "Admin"
+participant Backend as "Backend Service"
+database DB as "Database"
+
+== Delete Purchase Flow ==
+Admin -> Backend: Request to delete purchase (purchaseId)
+Backend -> DB: Find purchase by ID
+DB -> Backend: Return purchase data or null
+alt Purchase exists
+    Backend -> DB: Delete purchase
+    DB -> Backend: Confirm deletion
+else Purchase does not exist
+    Backend -> Backend: Throw PURCHASE_NOT_EXIST error
+end
+Backend -> Backend: Create delete response
+Backend -> Admin: Return delete response with purchaseId
+@enduml

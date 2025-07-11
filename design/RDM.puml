@@ -1,0 +1,143 @@
+@startuml
+
+entity "EMPLOYEE" as Employee {
+  + E_ID : VARCHAR(36) [PK]
+  + E_Username: VARCHAR(50) [NOT NULL] [UNIQUE]
+  + E_Fname : VARCHAR(255) [NOT NULL]
+  + E_Lname : VARCHAR(255) [NOT NULL]
+  + E_Bdate : DATE
+  + E_Age : INT
+  + E_Sex : CHAR(1) [NOT NULL]
+  + E_Type : VARCHAR(50) [NOT NULL]
+  + E_Jdate : DATE [NOT NULL]
+  + E_Add : VARCHAR(255)
+  + E_Mail : VARCHAR(255)
+  + E_Phno : VARCHAR(20)
+  + E_Sal : DECIMAL(10, 2)
+  + created_date : TIMESTAMP
+  + created_by : VARCHAR(36)
+  + updated_date : TIMESTAMP
+  + updated_by : VARCHAR(36)
+}
+
+entity "SUPPLIER" as Suppliers {
+  + Sup_ID : VARCHAR(36) [PK]
+  + Sup_Name : VARCHAR(255) [NOT NULL]
+  + Sup_Add : VARCHAR(255) [NOT NULL]
+  + Sup_Phno : VARCHAR(20) [NOT NULL]
+  + Sup_Mail : VARCHAR(255)
+  + created_date : TIMESTAMP
+  + created_by : VARCHAR(36)
+  + updated_date : TIMESTAMP
+  + updated_by : VARCHAR(36)
+}
+
+entity "CUSTOMER" as Customer {
+  + C_ID : VARCHAR(36) [PK]
+  + C_Fname : VARCHAR(255) [NOT NULL]
+  + C_Lname : VARCHAR(255) [NOT NULL]
+  + C_Age : INT
+  + C_Sex : CHAR(1) [NOT NULL]
+  + C_Phno : VARCHAR(20) [NOT NULL]
+  + C_Mail : VARCHAR(255)
+  + created_date : TIMESTAMP
+  + created_by : VARCHAR(36)
+  + updated_date : TIMESTAMP
+  + updated_by : VARCHAR(36)
+}
+
+entity "MED_CATEGORY" as MedCategory {
+  + Cat_ID : VARCHAR(36) [PK]
+  + Cat_Name : VARCHAR(255) [NOT NULL]
+  + Cat_Description : VARCHAR(1000)
+  + created_date : TIMESTAMP
+  + created_by : VARCHAR(36)
+  + updated_date : TIMESTAMP
+  + updated_by : VARCHAR(36)
+}
+
+entity "MED" as Meds {
+  + Med_ID : VARCHAR(36) [PK]
+  + Med_Name : VARCHAR(255) [NOT NULL]
+  + Med_Price : DECIMAL(10, 2) [NOT NULL]
+  + Cat_ID : VARCHAR(36) [NOT NULL]
+  + created_date : TIMESTAMP
+  + created_by : VARCHAR(36)
+  + updated_date : TIMESTAMP
+  + updated_by : VARCHAR(36)
+}
+
+entity "PURCHASE" as Purchase {
+  + P_ID : VARCHAR(36) [PK]
+  + Med_ID : VARCHAR(36) [FK]
+  + Sup_ID : VARCHAR(36) [FK]
+  + P_Qty : INT [NOT NULL]
+  + P_Cost : DECIMAL(10, 2) [NOT NULL]
+  + created_date : TIMESTAMP
+  + created_by : VARCHAR(36)
+  + updated_date : TIMESTAMP
+  + updated_by : VARCHAR(36)
+}
+
+entity "SALE" as Sales {
+  + Sale_ID : VARCHAR(36) [PK]
+  + S_Time : TIME [NOT NULL]
+  + Total_Amt : DECIMAL(10, 2) [NOT NULL]
+  + C_ID : VARCHAR(36) [FK] [NULLABLE]
+  + created_date : TIMESTAMP
+  + created_by : VARCHAR(36)
+  + updated_date : TIMESTAMP
+  + updated_by : VARCHAR(36)
+}
+
+entity "SALE_ITEM" as SalesItems {
+  + Med_ID : VARCHAR(36) [FK]
+  + Sale_ID : VARCHAR(36) [FK]
+  + Sale_Qty : INT [NOT NULL]
+  + Tot_Price : DECIMAL(10, 2) [NOT NULL]
+  + [PK] (Med_ID, Sale_ID)
+  + created_date : TIMESTAMP
+  + created_by : VARCHAR(36)
+  + updated_date : TIMESTAMP
+  + updated_by : VARCHAR(36)
+}
+
+entity "LOCATION_RACK" as LocationRack {
+  + LR_ID : VARCHAR(36) [PK]
+  + LR_POSITION : VARCHAR(50) [NOT NULL]
+  + created_date : TIMESTAMP
+  + created_by : VARCHAR(36)
+  + updated_date : TIMESTAMP
+  + updated_by : VARCHAR(36)
+}
+
+entity "INVENTORY" as Inventory {
+  + I_ID : VARCHAR(36) [PK]
+  + Med_ID : VARCHAR(36) [FK] [NOT NULL]
+  + LR_ID : VARCHAR(36) [FK] [NOT NULL]
+  + I_Qty : INT [NOT NULL]
+  + Mfg_Date : DATE [NOT NULL]
+  + Exp_Date : DATE [NOT NULL]
+  + created_date : TIMESTAMP
+  + created_by : VARCHAR(36)
+  + updated_date : TIMESTAMP
+  + updated_by : VARCHAR(36)
+}
+
+entity "CUSTOMER_POINT_CONFIG" as CustomerPointConfig {
+  + CPC_ID : VARCHAR(36) [PK]
+  + CPC_Ratio : NUMERIC [NOT NULL]
+  + updated_date : TIMESTAMP
+  + updated_by : VARCHAR(36)
+}
+
+Sales --|> Employee : created_by [FK]
+Sales --|> Customer : C_ID [FK]
+SalesItems --|> Sales : Sale_ID [FK]
+SalesItems --|> Meds : Med_ID [FK]
+Purchase --|> Meds : Med_ID [FK]
+Purchase --|> Suppliers : Sup_ID [FK]
+Inventory --|> Meds : Med_ID [FK]
+Inventory --|> LocationRack : LR_ID [FK]
+Meds --|> MedCategory : Cat_ID [FK]
+@enduml

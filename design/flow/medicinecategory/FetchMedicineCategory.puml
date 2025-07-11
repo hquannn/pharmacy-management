@@ -1,0 +1,13 @@
+@startuml
+autonumber
+
+actor Admin as "Admin"
+participant Backend as "Backend Service"
+database DB as "Database"
+
+== Get Medicine Categories Flow ==
+Admin -> Backend: Request to get medicine categories
+Backend -> DB: Query medicine categories with specifications
+DB -> Backend: Return medicine categories
+Backend -> Admin: Return success response with medicine categories data
+@enduml

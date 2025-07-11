@@ -1,0 +1,27 @@
+@startuml
+autonumber
+
+actor Admin as "Admin"
+participant Backend as "Backend Service"
+database DB as "Database"
+
+== Delete Medicine Category Flow ==
+Admin -> Backend: Request to delete medicine category
+Backend -> DB: Check if medicine category exists
+alt ["medicine category exists"]
+    DB -> Backend: Return medicine category
+    Backend -> DB: Check if category is being used
+    alt ["category is being used"]
+        DB -> Backend: Return category in use error
+        Backend -> Admin: Return error response (CATEGORY_IS_BEING_USED)
+    else
+        DB -> Backend: Confirm category can be deleted
+        Backend -> DB: Delete medicine category
+        DB -> Backend: Deletion success
+        Backend -> Admin: Return success response
+    end
+else
+    DB -> Backend: Return category not exist error
+    Backend -> Admin: Return error response (CATEGORY_NOT_EXIST)
+end
+@enduml

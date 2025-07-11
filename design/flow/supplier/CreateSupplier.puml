@@ -1,0 +1,14 @@
+@startuml
+autonumber
+
+actor Admin as "Admin"
+participant Backend as "Backend Service"
+database DB as "Database"
+
+== Create Supplier Flow ==
+Admin -> Backend: Request to create supplier
+Backend -> DB: Save supplier entity
+DB -> Backend: Save success and return supplier
+Backend -> Backend: Map entity to Supplier response
+Backend -> Admin: Return supplier creation response
+@enduml

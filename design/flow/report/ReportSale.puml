@@ -1,0 +1,25 @@
+@startuml
+autonumber
+
+actor Employee as "Employee"
+participant Backend as "Backend Service"
+database DB as "Database"
+
+== Get Sales Flow ==
+Employee -> Backend: Request sales data
+Backend -> Backend: Check if user is admin
+
+alt ["Is Admin"]
+    Backend -> Backend: Set employeeId to null
+else ["Is Regular Employee"]
+    Backend -> Backend: Get employeeId from current user
+end
+
+Backend -> Backend: Prepare query for sales data
+Backend -> DB: Fetch sales data from database
+DB -> Backend: Return sales data results
+
+Backend -> Backend: Convert sales data to response format
+Backend -> Employee: Send sales data response
+
+@enduml

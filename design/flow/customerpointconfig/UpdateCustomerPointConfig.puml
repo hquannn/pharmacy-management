@@ -1,0 +1,22 @@
+@startuml
+autonumber
+
+actor Employee as "Employee"
+participant Backend as "Backend Service"
+database DB as "Database"
+
+== Update Customer Point Config Flow ==
+Employee -> Backend: Request to update customer point config (id and new data)
+Backend -> DB: Look for customer point config by id
+DB -> Backend: Return customer point config if found
+
+alt ["Config Found"]
+    Backend -> Backend: Update customer point config with new data
+    Backend -> DB: Save the updated config
+    Backend -> Backend: Prepare response with updated config details
+    Backend -> Employee: Send response with updated config details
+else ["Config Not Found"]
+    Backend -> Backend: Show error message for the not found
+end
+
+@enduml
