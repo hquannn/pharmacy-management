@@ -7,6 +7,7 @@ import com.app.pharmacy.domain.dto.customer.CreateCustomerRequest;
 import com.app.pharmacy.domain.dto.customer.GetCustomerRequest;
 import com.app.pharmacy.domain.dto.customer.CustomerResponse;
 import com.app.pharmacy.domain.dto.customer.UpdateCustomerRequest;
+import com.app.pharmacy.domain.dto.employee.ChangePasswordRequest;
 import com.app.pharmacy.domain.entity.Customer;
 import com.app.pharmacy.exception.CustomResponseException;
 import com.app.pharmacy.exception.ErrorCode;
@@ -32,13 +33,17 @@ import static com.app.pharmacy.specification.CustomerSpecification.hasPhoneNo;
 @Service
 @RequiredArgsConstructor
 public class CustomerService {
+    private final KeycloakAdminService keycloakAdminService;
     private final CustomerRepository customerRepository;
     private final SaleRepository saleRepository;
     private final Clock clock;
 
     public ApiResponse<CustomerResponse> createCustomer(CreateCustomerRequest request, Authentication connectedUser) {
         ApiResponse<CustomerResponse> response = new ApiResponse<>();
+
+        String customerId = keycloakAdminService.createCustomer(request);
         Customer customer = CustomerMapper.INSTANCE.toEntity(request);
+        customer.setId(customerId);
         customer.setCreatedBy(connectedUser.getName());
         customer.setCreatedDate(LocalDateTime.now(clock));
         try {
@@ -50,6 +55,8 @@ public class CustomerService {
         }
 
         CustomerResponse customerResponse = CustomerMapper.INSTANCE.toCustomerResponse(customer);
+        customerResponse.setUsername(request.username());
+        customerResponse.setRole(request.role());
         response.setData(customerResponse);
         return response;
     }
@@ -89,6 +96,7 @@ public class CustomerService {
 
     public ApiResponse<CommonDeleteResponse> deleteCustomer(String customerId) {
         ApiResponse<CommonDeleteResponse> response = new ApiResponse<>();
+        keycloakAdminService.deleteCustomer(customerId);
         customerRepository.findById(customerId).ifPresentOrElse(customer -> {
             if (saleRepository.existsByCustomerId(customerId)) {
                 throw new CustomResponseException(ErrorCode.CUSTOMER_IS_BEING_USED);
@@ -98,6 +106,22 @@ public class CustomerService {
             throw new CustomResponseException(ErrorCode.CUSTOMER_NOT_EXIST);
         });
         response.setData(new CommonDeleteResponse(customerId));
+        return response;
+    }
+
+    public ApiResponse<Boolean> changePassword(ChangePasswordRequest request, Authentication  connectedUser){
+        ApiResponse<Boolean> response = new ApiResponse<>();
+        String username = keycloakAdminService.getCustomerNameById(connectedUser.getName());
+
+        if(!keycloakAdminService.isOldPasswordValid(username, request.oldPassword())){
+            throw new CustomResponseException(ErrorCode.OLD_PASSWORD_INVALID);
+        }
+        if (!request.newPassword().equals(request.confirmNewPassword())) {
+            throw new CustomResponseException(ErrorCode.CONFIRM_NEW_PASSWORD_INVALID);
+        }
+        keycloakAdminService.resetCustomerPassword(connectedUser.getName(), request.newPassword());
+        response.setData(true);
+        response.setMessage("Password is changed successful!");
         return response;
     }
 

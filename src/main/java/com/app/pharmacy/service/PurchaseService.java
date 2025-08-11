@@ -8,17 +8,11 @@ import com.app.pharmacy.domain.dto.purchase.CreateUpdatePurchaseResponse;
 import com.app.pharmacy.domain.dto.purchase.GetPurchaseRequest;
 import com.app.pharmacy.domain.dto.purchase.GetPurchaseResponse;
 import com.app.pharmacy.domain.dto.purchase.UpdatePurchaseRequest;
-import com.app.pharmacy.domain.entity.Inventory;
-import com.app.pharmacy.domain.entity.Medicine;
-import com.app.pharmacy.domain.entity.Purchase;
-import com.app.pharmacy.domain.entity.Supplier;
+import com.app.pharmacy.domain.entity.*;
 import com.app.pharmacy.exception.CustomResponseException;
 import com.app.pharmacy.exception.ErrorCode;
 import com.app.pharmacy.mapper.PurchaseMapper;
-import com.app.pharmacy.repository.InventoryRepository;
-import com.app.pharmacy.repository.MedicineRepository;
-import com.app.pharmacy.repository.PurchaseRepository;
-import com.app.pharmacy.repository.SupplierRepository;
+import com.app.pharmacy.repository.*;
 import com.app.pharmacy.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -44,6 +38,7 @@ public class PurchaseService {
     private final InventoryRepository inventoryRepository;
     private final MedicineRepository medicineRepository;
     private final SupplierRepository supplierRepository;
+    private final CartRepository  cartRepository;
     private final Clock clock;
 
     public ApiResponse<CreateUpdatePurchaseResponse> createPurchase(CreatePurchaseRequest request, Authentication connectedUser) {
@@ -64,6 +59,8 @@ public class PurchaseService {
                 + StringUtils.generateRandomNumberString(6));
 
         saveInventory(request, connectedUser, medicine);
+
+        saveCart(request, connectedUser, medicine);
 
         purchaseRepository.save(purchase);
 
@@ -90,6 +87,26 @@ public class PurchaseService {
                         .createdDate(LocalDateTime.now(clock))
                         .build())
         );
+    }
+
+    private void saveCart(CreatePurchaseRequest request, Authentication connectedUser, Medicine medicine) {
+        Optional<Cart> cart = cartRepository.findByMedicineIdAndMfgDate(request.medicineId(), request.mfgDate());
+        cart.ifPresentOrElse(i -> {
+            i.setQuantity(i.getQuantity() + request.quantity());
+            i.setUpdatedBy(connectedUser.getName());
+            i.setUpdatedDate(LocalDateTime.now(clock));
+            cartRepository.save(i);
+        }, () -> cartRepository.save(Cart
+                .builder()
+                .medicine(medicine)
+                .locationRackId(request.locationRackId())
+                .quantity(request.quantity())
+                .mfgDate(request.mfgDate())
+                .expDate(request.expDate())
+                .createdBy(connectedUser.getName())
+                .createdDate(LocalDateTime.now(clock))
+                .build()
+        ));
     }
 
     public ApiResponse<CommonGetResponse<GetPurchaseResponse>> getPurchases(GetPurchaseRequest request, Pageable pageable) {
@@ -131,6 +148,7 @@ public class PurchaseService {
                     throw new CustomResponseException(ErrorCode.MEDICINE_NOT_EXIST);
                 });
                 saveInventory(PurchaseMapper.INSTANCE.toCreateRequest(request), connectedUser, purchase.getMedicine());
+                saveCart(PurchaseMapper.INSTANCE.toCreateRequest(request), connectedUser, purchase.getMedicine());
 
             }
             if (request.supplierId() != null) {

@@ -4,4 +4,5 @@ public class Constants {
     public static final String PURCHASE_CODE_PREFIX = "P";
     public static final String SALE_CODE_PREFIX = "S";
     public static final String REFUND_CODE_PREFIX = "R";
+    public static final String ORDER_CODE_PREFIX = "O";
 }

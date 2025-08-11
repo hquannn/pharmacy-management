@@ -1,5 +1,6 @@
 package com.app.pharmacy.domain.dto.customer;
 
+import com.app.pharmacy.domain.dto.employee.EmployeeRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,9 +17,10 @@ import java.time.LocalDateTime;
 @Builder
 public class CustomerResponse {
     private String id;
-
+    private String username;
     private String firstName;
     private String lastName;
+    private EmployeeRole role;
     private Integer age;
     private String sex;
     private String phoneNo;

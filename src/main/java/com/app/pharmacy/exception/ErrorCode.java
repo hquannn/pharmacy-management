@@ -33,6 +33,8 @@ public enum ErrorCode {
     CONFIRM_NEW_PASSWORD_INVALID("PS00020", "Confirm new password does not match", HttpStatus.BAD_REQUEST),
     UNIT_NOT_EXIST("PS00021", "Unit is not found", HttpStatus.BAD_REQUEST),
     CANNOT_CHANGE_ADMIN_PASSWORD("PS00022", "Cannot change password for user 'admin'", HttpStatus.BAD_REQUEST),
+    CART_NOT_EXISTED("PS00023", "Cart is  not found", HttpStatus.BAD_REQUEST),
+    CUSTOMER_EXISTED("PS00024", "Username or Email is existed", HttpStatus.BAD_REQUEST)
     ;
 
     ErrorCode(String code, String message, HttpStatusCode statusCode) {

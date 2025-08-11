@@ -37,7 +37,7 @@ public class MedicineController {
     private final MedicineService medicineService;
 
     @GetMapping
-    @PreAuthorize("hasRole('USER') || hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') || hasRole('ADMIN') ||  hasRole('CUSTOMER')")
     public ResponseEntity<ApiResponse<CommonGetResponse<MedicineResponse>>> getMedicines(
             @ModelAttribute GetMedicineRequest request,
             @PageableDefault(sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable
@@ -67,7 +67,7 @@ public class MedicineController {
     }
 
     @GetMapping("/units")
-    @PreAuthorize("hasRole('USER') || hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') || hasRole('ADMIN') || hasRole('CUSTOMER')")
     public ResponseEntity<ApiResponse<List<MedUnitResponse>>> getMedicineUnit() {
         return ResponseEntity.ok(medicineService.getMedicineUnits());
     }

@@ -4,12 +4,15 @@ import com.app.pharmacy.domain.common.ApiResponse;
 import com.app.pharmacy.domain.common.CommonGetResponse;
 import com.app.pharmacy.domain.dto.inventory.GetInventoryRequest;
 import com.app.pharmacy.domain.dto.inventory.InventoryDTO;
+import com.app.pharmacy.domain.dto.order.OrderLogRequest;
+import com.app.pharmacy.domain.dto.order.OrderResponse;
 import com.app.pharmacy.domain.dto.report.ProfitPerDayRequest;
 import com.app.pharmacy.domain.dto.report.ProfitPerDayResponse;
 import com.app.pharmacy.domain.dto.report.SaleChartInfoResponse;
 import com.app.pharmacy.domain.dto.sale.SaleLogRequest;
 import com.app.pharmacy.domain.dto.sale.SaleResponse;
 import com.app.pharmacy.service.InventoryService;
+import com.app.pharmacy.service.OrderService;
 import com.app.pharmacy.service.ReportService;
 import com.app.pharmacy.service.SaleService;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +36,7 @@ public class ReportController {
     private final SaleService saleService;
     private final InventoryService inventoryService;
     private final ReportService reportService;
+    private final OrderService orderService;
 
     @GetMapping("/sales")
     @PreAuthorize("hasRole('ADMIN') || hasRole('USER')")
@@ -42,6 +46,16 @@ public class ReportController {
             Authentication connectedUser
     ) {
         return ResponseEntity.ok(saleService.getSales(request, pageable, connectedUser));
+    }
+
+    @GetMapping("/orders")
+    @PreAuthorize("hasRole('ADMIN') || hasRole('USER')")
+    public ResponseEntity<ApiResponse<CommonGetResponse<OrderResponse>>> reportOrders(
+            @ModelAttribute OrderLogRequest request,
+            @PageableDefault(sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable,
+            Authentication connectedUser
+    ) {
+        return ResponseEntity.ok(orderService.getOrders(request, pageable, connectedUser));
     }
 
     @GetMapping("/profit-per-day")

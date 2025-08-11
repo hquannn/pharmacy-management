@@ -32,6 +32,7 @@ CREATE TABLE SUPPLIER (
 
 CREATE TABLE CUSTOMER (
     C_ID VARCHAR(36) NOT NULL PRIMARY KEY,
+    C_Username VARCHAR(50) NOT NULL UNIQUE,
     C_Fname VARCHAR(255) NOT NULL,
     C_Lname VARCHAR(255),
     C_Age INT,
@@ -40,7 +41,7 @@ CREATE TABLE CUSTOMER (
     C_Mail VARCHAR(255),
     C_Points NUMERIC,
     created_date TIMESTAMP NOT NULL UNIQUE,
-    created_by VARCHAR(36) NOT NULL,
+    created_by VARCHAR(36),
     updated_date TIMESTAMP,
     updated_by VARCHAR(36),
     UNIQUE(C_Phno)
@@ -150,6 +151,56 @@ CREATE TABLE INVENTORY (
     updated_date TIMESTAMP,
     updated_by VARCHAR(36),
     UNIQUE (Med_ID, Mfg_Date)
+);
+
+CREATE TABLE CART (
+    Cart_ID VARCHAR(36) PRIMARY KEY,
+    Med_ID  VARCHAR(36) NOT NULL,
+    LR_ID VARCHAR(36) NOT NULL,
+    I_Qty INT NOT NULL,
+    Mfg_Date DATE NOT NULL,
+    Exp_Date DATE NOT NULL,
+    created_date TIMESTAMP NOT NULL,
+    created_by VARCHAR(36) NOT NULL,
+    updated_date TIMESTAMP,
+    updated_by VARCHAR(36),
+    UNIQUE (Med_ID, Mfg_Date)
+);
+
+CREATE TABLE ORDERS (
+    Order_ID VARCHAR(36) NOT NULL PRIMARY KEY,
+    Total_Amt DECIMAL(10, 2),
+    C_ID VARCHAR(36) NOT NULL
+);
+
+CREATE TABLE ORDER_LOG (
+    Order_ID VARCHAR(36) NOT NULL,
+    Total_Amt DECIMAL(10, 2),
+    type VARCHAR(6) NOT NULL,
+    refund_item_id VARCHAR(255),
+    use_point BOOLEAN,
+    Order_Code VARCHAR(9) NOT NULL,
+    created_date TIMESTAMP NOT NULL,
+    created_by VARCHAR(36),
+    PRIMARY KEY (Order_ID, created_date)
+) PARTITION BY RANGE (created_date);
+
+CREATE TABLE order_log_2024 PARTITION OF ORDER_LOG
+  FOR VALUES FROM ('2024-01-01') TO ('2025-01-01');
+
+CREATE TABLE order_log_2025 PARTITION OF ORDER_LOG
+  FOR VALUES FROM ('2025-01-01') TO ('2026-01-01');
+
+CREATE TABLE ORDER_ITEM (
+    Cart_ID VARCHAR(36),
+    Order_ID VARCHAR(36),
+    Order_Qty INT NOT NULL,
+    Tot_Price DECIMAL(10, 2) NOT NULL,
+    PRIMARY KEY (Cart_ID, Order_ID),
+    created_date TIMESTAMP NOT NULL,
+    created_by VARCHAR(36) NOT NULL,
+    updated_date TIMESTAMP,
+    updated_by VARCHAR(36)
 );
 
 CREATE TABLE CUSTOMER_POINT_CONFIG (

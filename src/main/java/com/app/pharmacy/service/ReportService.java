@@ -5,8 +5,11 @@ import com.app.pharmacy.domain.dto.report.ProfitPerDayRequest;
 import com.app.pharmacy.domain.dto.report.ProfitPerDayResponse;
 import com.app.pharmacy.domain.dto.report.SaleChartInfoResponse;
 import com.app.pharmacy.domain.dto.sale.SaleType;
+import com.app.pharmacy.domain.entity.OrderLog;
 import com.app.pharmacy.domain.entity.SaleLog;
+import com.app.pharmacy.repository.OrderLogRepository;
 import com.app.pharmacy.repository.SaleLogRepository;
+import com.app.pharmacy.specification.OrderSpecification;
 import com.app.pharmacy.specification.SaleSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,19 +29,31 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ReportService {
     private final SaleLogRepository saleLogRepository;
+    private final OrderLogRepository orderLogRepository;
 
     public ApiResponse<ProfitPerDayResponse> getProfitPerDay(ProfitPerDayRequest request) {
         ApiResponse<ProfitPerDayResponse> response = new ApiResponse<>();
         LocalDate date = request.date() != null ? request.date() : LocalDate.now();
         LocalDateTime startOfDay = date.atStartOfDay();
         LocalDateTime endOfDay = date.atTime(23, 59, 59, 999999999);
-        Specification<SaleLog> specification = Specification.where(
+        Specification<SaleLog> saleSpec = Specification.where(
                 SaleSpecification.hasSaleDate(startOfDay, endOfDay));
+        Specification<OrderLog> orderSpec = Specification.where(
+                OrderSpecification.hasOrderDate(startOfDay, endOfDay));
+
+        BigDecimal saleAmount = saleLogRepository.findAll(saleSpec).stream()
+                .map(SaleLog::getTotalAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal orderAmount = orderLogRepository.findAll(orderSpec).stream()
+                .map(OrderLog::getTotalAmount) // or .getAmount(), adjust to your field name
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal totalProfit = saleAmount.add(orderAmount);
+
         ProfitPerDayResponse profitPerDayResponse = ProfitPerDayResponse
                 .builder()
-                .amount(saleLogRepository.findAll(specification).stream()
-                        .map(SaleLog::getTotalAmount)
-                        .reduce(BigDecimal.ZERO, BigDecimal::add))
+                .amount(totalProfit)
                 .build();
 
         response.setData(profitPerDayResponse);
@@ -96,5 +111,4 @@ public class ReportService {
         });
         return saleChartInfoResponses;
     }
-
 }

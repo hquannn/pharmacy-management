@@ -34,7 +34,7 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN') || hasRole('USER')")
+    @PreAuthorize("hasRole('ADMIN') || hasRole('USER') || hasRole('CUSTOMER')")
     public ResponseEntity<ApiResponse<CommonGetResponse<CustomerResponse>>> getCustomers(
             @ModelAttribute GetCustomerRequest request,
             @PageableDefault(sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable

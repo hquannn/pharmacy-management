@@ -6,16 +6,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-
 @Embeddable
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class InventorySaleId {
-    @Column(name = "I_ID", nullable = false)
-    private String inventoryId;
+public class CartOrderId {
+    @Column(name = "Cart_ID", nullable = false)
+    private String cartId;
 
-    @Column(name = "Sale_ID", nullable = false)
-    private String saleId;
+    @Column(name = "Order_ID", nullable = false)
+    private String orderId;
 }
