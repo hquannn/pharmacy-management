@@ -1,0 +1,94 @@
+@startuml
+title Biểu đồ VOCP - Xem thông tin đơn hàng
+
+package "Boundary" {
+  class XemThongTinDonHangUI {
+    +kich nut "Account()"
+    +hien thi menu nguoi dung()
+    +kich nut "My Order()"
+    +hien thi danh sach don hang()
+  }
+
+  class IHTCSDL {
+    +cap nhat bang Account()
+    +doc bang Account()
+    +cap nhat bang Order()
+    +doc bang Order()
+    +cap nhat bang OrderDetails()
+    +doc bang OrderDetails()
+    +doc bang ProductDetails()
+    +doc bang Product()
+    +doc bang ProductImage()
+    +doc bang ProductSize()
+    +doc bang ProductType()
+    +doc bang ProductRecipe()
+    +doc bang Material()
+    +doc bang Unit()
+    +cap nhat bang Product()
+    +cap nhat bang ProductImage()
+    +cap nhat bang ProductDetails()
+    +cap nhat bang ProductRecipe()
+    +doc bang ImportStock()
+    +doc bang ImportDetails()
+  }
+}
+
+package "Control" {
+  class XemThongTinDonHangController
+}
+
+package "Entity" {
+  class Product {
+    -Code
+    -Name
+    -IsActive
+    -Description
+    +getProductById()
+  }
+
+  class ProductImage {
+    -ImageUrl
+    -ImageName
+    +getProductImageByProduct()
+  }
+
+  class ProductSize {
+    -Code
+    -Name
+    -Description
+    -CreatedDate
+    -CreatedBy
+    -UpdatedDate
+  }
+
+  class ProductDetails {
+    -Price
+    +getProductDetailsById()
+    +setProductDetailsByProductDetailsId()
+  }
+
+  class OrderDetails {
+    -quantity
+    -totalMoney
+    +createOrderDetail()
+  }
+
+  class Order {
+    -customerName
+    -phoneNumber
+    -address
+    -status
+    -createdDate
+    -createdBy
+    +createOrder()
+  }
+}
+
+' Quan hệ
+XemThongTinDonHangUI --> XemThongTinDonHangController
+XemThongTinDonHangController --> Product
+XemThongTinDonHangController --> ProductImage
+XemThongTinDonHangController --> ProductSize
+XemThongTinDonHangController --> ProductDetails
+XemThongTinDonHangController --> OrderDetails
+XemThongTinDonHangController -->

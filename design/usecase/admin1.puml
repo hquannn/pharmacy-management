@@ -1,0 +1,154 @@
+@startuml
+
+start
+:Người dùng đăng nhập hệ thống;
+
+fork
+' ------------------- Medicine Management -------------------
+partition "Medicine Management" {
+    :Xem danh sách thuốc (GET /medicines);
+    :Nhập thông tin thuốc;
+    :Kiểm tra thông tin hợp lệ;
+    if (Hợp lệ?) then (Có)
+        :Kiểm tra thuốc đã tồn tại?;
+        if (Chưa tồn tại) then (Có)
+            :Thêm thuốc mới vào hệ thống;
+        else (Đã tồn tại)
+            :Báo lỗi "Thuốc đã tồn tại";
+        endif
+    else (Không hợp lệ)
+        :Báo lỗi "Thông tin thuốc không hợp lệ";
+    endif
+}
+fork again
+' ------------------- Location Rack Management -------------------
+partition "Location Rack Management" {
+    :Xem danh sách vị trí lưu trữ;
+    :Nhập thông tin vị trí;
+    :Kiểm tra hợp lệ;
+    if (Hợp lệ?) then (Có)
+        :Kiểm tra vị trí đã tồn tại?;
+        if (Chưa tồn tại) then (Có)
+            :Thêm vị trí mới;
+        else (Đã tồn tại)
+            :Cập nhật/Xóa vị trí;
+        endif
+    else (Không hợp lệ)
+        :Báo lỗi "Thông tin vị trí không hợp lệ";
+    endif
+}
+fork again
+' ------------------- Medicine Category Management -------------------
+partition "Medicine Category Management" {
+    :Xem danh mục thuốc;
+    :Nhập thông tin danh mục;
+    :Kiểm tra hợp lệ;
+    if (Hợp lệ?) then (Có)
+        :Kiểm tra danh mục đã tồn tại?;
+        if (Chưa tồn tại) then (Có)
+            :Thêm danh mục mới;
+        else (Đã tồn tại)
+            :Cập nhật/Xóa danh mục;
+        endif
+    else (Không hợp lệ)
+        :Báo lỗi "Danh mục không hợp lệ";
+    endif
+}
+fork again
+' ------------------- Supplier Management -------------------
+partition "Supplier Management" {
+    :Xem danh sách nhà cung cấp;
+    :Nhập thông tin nhà cung cấp;
+    :Kiểm tra hợp lệ;
+    if (Hợp lệ?) then (Có)
+        :Kiểm tra NCC đã tồn tại?;
+        if (Chưa tồn tại) then (Có)
+            :Thêm nhà cung cấp mới;
+        else (Đã tồn tại)
+            :Cập nhật/Xóa thông tin NCC;
+        endif
+    else (Không hợp lệ)
+        :Báo lỗi "Thông tin NCC không hợp lệ";
+    endif
+}
+fork again
+' ------------------- Stock Purchase Management -------------------
+partition "Stock Purchase Management" {
+    :Xem danh sách phiếu nhập hàng;
+    :Nhập thông tin phiếu nhập;
+    :Kiểm tra hợp lệ;
+    if (Hợp lệ?) then (Có)
+        :Cập nhật số lượng tồn kho;
+        :Lưu phiếu nhập hàng;
+    else (Không hợp lệ)
+        :Báo lỗi "Phiếu nhập không hợp lệ";
+    endif
+}
+fork again
+' ------------------- Employee Management -------------------
+partition "Employee Management" {
+    :Xem danh sách nhân viên;
+    :Nhập thông tin nhân viên;
+    :Kiểm tra hợp lệ;
+    if (Hợp lệ?) then (Có)
+        :Kiểm tra nhân viên đã tồn tại?;
+        if (Chưa tồn tại) then (Có)
+            :Thêm nhân viên mới;
+        else (Đã tồn tại)
+            :Cập nhật/Xóa nhân viên;
+        endif
+    else (Không hợp lệ)
+        :Báo lỗi "Thông tin nhân viên không hợp lệ";
+    endif
+    :Đổi mật khẩu nhân viên;
+}
+fork again
+' ------------------- Customer Management -------------------
+partition "Customer Management" {
+    :Xem danh sách khách hàng;
+    :Nhập thông tin khách hàng;
+    :Kiểm tra hợp lệ;
+    if (Hợp lệ?) then (Có)
+        :Kiểm tra khách hàng đã tồn tại?;
+        if (Chưa tồn tại) then (Có)
+            :Thêm khách hàng mới;
+        else (Đã tồn tại)
+            :Cập nhật/Xóa khách hàng;
+        endif
+    else (Không hợp lệ)
+        :Báo lỗi "Thông tin khách hàng không hợp lệ";
+    endif
+}
+fork again
+' ------------------- Sales Management -------------------
+partition "Sales Management" {
+    :Nhập thông tin bán hàng;
+    :Kiểm tra số lượng tồn kho;
+    if (Đủ hàng?) then (Có)
+        :Lưu thông tin bán hàng;
+    else (Không)
+        :Báo lỗi "Không đủ hàng tồn kho";
+    endif
+
+    :Xử lý hoàn trả thuốc;
+    :Cập nhật tồn kho sau hoàn trả;
+}
+fork again
+' ------------------- Reports -------------------
+partition "Reports" {
+    :Xem báo cáo bán hàng;
+    :Xem lợi nhuận theo ngày;
+    :Xem báo cáo tồn kho;
+    :Xem dữ liệu biểu đồ bán hàng;
+}
+fork again
+' ------------------- Customer Points Config -------------------
+partition "Customer Points Config" {
+    :Xem cấu hình điểm thưởng;
+    :Cập nhật điểm thưởng khách hàng;
+}
+end fork
+
+:Database;
+stop
+@enduml

@@ -1,0 +1,21 @@
+@startuml
+autonumber
+
+actor Admin as "Admin"
+participant Backend as "Backend Service"
+participant OCR as "ORC Service"
+database DB as "Database"
+
+== Medicine Scan Flow ==
+Admin -> Backend: Scan medicine request
+Backend -> DB: Check if category exists
+alt ["category not found"]
+    DB -> Backend: category not found
+    Backend -> Admin: Error: CATEGORY_NOT_EXIST
+else
+    DB -> Backend: category exists
+    Backend -> DB: Save medicine
+    DB -> Backend: save success
+    Backend -> Admin: Medicine creation success
+end
+@enduml

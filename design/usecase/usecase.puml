@@ -1,0 +1,51 @@
+@startuml
+left to right direction
+skinparam actorStyle stickman
+skinparam packageStyle rectangle
+
+
+
+actor Admin as QL
+actor Employee as E
+
+
+
+ (Quan ly nhan vien) as nv
+ (Quan ly thuoc) as t
+ (Quet thong tin thuoc) as sc
+ (Quan ly danh muc) as dt
+ (Quan ly ke) as k
+ (Quan ly nha cung cap) as ncc
+ (Quan ly Khach hang) as kh
+ (Quan ly phieu nhap) as pn
+ (Dang nhap) as dn
+ (Thanh toan) as tt
+ (Xuat hoa don) as hd
+ (Xem bao cao) as bc
+
+ (Xem thuoc) as tc
+ (Them khach hang) as tkh
+
+
+QL --> nv
+QL --> t
+QL --> k
+QL --> ncc
+QL --> kh
+QL --> pn
+QL --> dn
+QL --> tt
+QL --> hd
+QL --> bc
+QL --> dt
+QL --> sc
+
+dn --> E
+tt --> E
+hd --> E
+tc --> E
+tkh --> E
+bc --> E
+
+
+@enduml

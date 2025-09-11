@@ -1,0 +1,27 @@
+@startuml
+title Activity Diagram - Quy trình bán hàng
+
+start
+:Nhân viên đăng nhập vào hệ thống;
+:Tìm kiếm sản phẩm được yêu cầu;
+:Thêm vào giỏ hàng;
+
+if (Còn thiếu sản phẩm không?) then (Có)
+  :Quay lại trang tiếp tục chọn;
+else (Không)
+endif
+
+: Kiểm tra thông tin khách hàng;
+
+if (Khách hàng mới?) then (Không)
+  :Lấy thông tin khách hàng;
+else (có)
+  :Tạo khách hàng mới;
+endif
+
+: Xác nhận tên, số điện thoại khách hàng;
+:Click thanh toán;
+:Tạo hoá đơn;
+
+stop
+@enduml

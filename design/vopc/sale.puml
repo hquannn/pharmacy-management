@@ -1,0 +1,78 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+
+  class SaleUI {
+    + requestCreateSale()
+    + requestRefund()
+    + showSaleResponse()
+    + showRefundResponse()
+  }
+
+  class SaleController {
+    + createSale()
+    + refundSale()
+  }
+
+  class Sale {
+    - saleCode
+    - totalAmount
+    - createdDate
+    + createSale()
+    + calculateTotalAmount()
+  }
+
+  class SaleItem {
+    - quantity
+    - price
+    + mapToSale()
+  }
+
+  class Customer {
+    - customerName
+    - phoneNumber
+    - points
+    + updatePoints()
+  }
+
+  class Inventory {
+    - productId
+    - quantity
+    + updateInventory()
+  }
+
+  class SaleLog {
+    + logSale()
+    + logRefund()
+  }
+
+  class BackendService {
+    + read Sale()
+    + update Sale()
+    + read SaleItem()
+    + update SaleItem()
+    + read Customer()
+    + update Customer()
+    + read Inventory()
+    + update Inventory()
+    + doc bang SaleLog()
+    + cap nhat bang SaleLog()
+  }
+
+SaleUI --> SaleController
+SaleController --> Sale
+SaleController --> SaleItem
+SaleController --> Customer
+SaleController --> Inventory
+SaleController --> SaleLog
+Sale --> SaleItem
+SaleController --> BackendService
+Sale --> BackendService
+SaleItem --> BackendService
+Customer --> BackendService
+Inventory --> BackendService
+SaleLog --> BackendService
+
+@enduml

@@ -34,7 +34,9 @@ public enum ErrorCode {
     UNIT_NOT_EXIST("PS00021", "Unit is not found", HttpStatus.BAD_REQUEST),
     CANNOT_CHANGE_ADMIN_PASSWORD("PS00022", "Cannot change password for user 'admin'", HttpStatus.BAD_REQUEST),
     CART_NOT_EXISTED("PS00023", "Cart is  not found", HttpStatus.BAD_REQUEST),
-    CUSTOMER_EXISTED("PS00024", "Username or Email is existed", HttpStatus.BAD_REQUEST)
+    CUSTOMER_EXISTED("PS00024", "Username or Email is existed", HttpStatus.BAD_REQUEST),
+    SCAN_FAILED("PS00025", "Cannot return information", HttpStatus.BAD_REQUEST),
+    FILE_PROCESS_ERROR("PS00026", "Cannot processing image", HttpStatus.BAD_REQUEST)
     ;
 
     ErrorCode(String code, String message, HttpStatusCode statusCode) {

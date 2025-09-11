@@ -1,0 +1,35 @@
+@startuml
+left to right direction
+skinparam actorStyle stickman
+skinparam packageStyle rectangle
+
+
+
+
+actor Admin as E
+
+
+
+
+
+
+
+
+ (Dang nhap) as dn
+ (Doi mat khau) as tt
+ (Hoan tien) as hd
+ (Cau hinh diem thuong) as bc
+
+
+E --> tt
+E --> hd
+E --> bc
+
+
+tt --> dn : <<include>>
+hd --> dn : <<include>>
+bc --> dn : <<include>>
+
+
+
+@enduml

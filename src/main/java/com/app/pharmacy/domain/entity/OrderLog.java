@@ -1,7 +1,7 @@
 package com.app.pharmacy.domain.entity;
 
 import com.app.pharmacy.domain.dto.order.OrderType;
-import com.app.pharmacy.domain.dto.sale.SaleType;
+
 import jakarta.persistence.*;
 import lombok.*;
 
