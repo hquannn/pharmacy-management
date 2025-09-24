@@ -50,6 +50,12 @@ public class Medicine {
     @JoinColumn(name = "MU_ID", referencedColumnName = "MU_ID", insertable = false, updatable = false)
     private MedicineUnit unit;
 
+    @Column(name = "Med_Ingre")
+    private String ingredients;
+
+    @Column(name = "Med_Des")
+    private String description;
+
     @Column(name = "created_date")
     private LocalDateTime createdDate;
     @Column(name = "created_by")

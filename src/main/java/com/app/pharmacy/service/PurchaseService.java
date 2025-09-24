@@ -60,7 +60,7 @@ public class PurchaseService {
 
         saveInventory(request, connectedUser, medicine);
 
-        saveCart(request, connectedUser, medicine);
+        //saveCart(request, connectedUser, medicine);
 
         purchaseRepository.save(purchase);
 
@@ -89,25 +89,25 @@ public class PurchaseService {
         );
     }
 
-    private void saveCart(CreatePurchaseRequest request, Authentication connectedUser, Medicine medicine) {
-        Optional<Cart> cart = cartRepository.findByMedicineIdAndMfgDate(request.medicineId(), request.mfgDate());
-        cart.ifPresentOrElse(i -> {
-            i.setQuantity(i.getQuantity() + request.quantity());
-            i.setUpdatedBy(connectedUser.getName());
-            i.setUpdatedDate(LocalDateTime.now(clock));
-            cartRepository.save(i);
-        }, () -> cartRepository.save(Cart
-                .builder()
-                .medicine(medicine)
-                .locationRackId(request.locationRackId())
-                .quantity(request.quantity())
-                .mfgDate(request.mfgDate())
-                .expDate(request.expDate())
-                .createdBy(connectedUser.getName())
-                .createdDate(LocalDateTime.now(clock))
-                .build()
-        ));
-    }
+//    private void saveCart(CreatePurchaseRequest request, Authentication connectedUser, Medicine medicine) {
+//        Optional<Cart> cart = cartRepository.findByMedicineIdAndMfgDate(request.medicineId(), request.mfgDate());
+//        cart.ifPresentOrElse(i -> {
+//            i.setQuantity(i.getQuantity() + request.quantity());
+//            i.setUpdatedBy(connectedUser.getName());
+//            i.setUpdatedDate(LocalDateTime.now(clock));
+//            cartRepository.save(i);
+//        }, () -> cartRepository.save(Cart
+//                .builder()
+//                .medicine(medicine)
+//                .locationRackId(request.locationRackId())
+//                .quantity(request.quantity())
+//                .mfgDate(request.mfgDate())
+//                .expDate(request.expDate())
+//                .createdBy(connectedUser.getName())
+//                .createdDate(LocalDateTime.now(clock))
+//                .build()
+//        ));
+//    }
 
     public ApiResponse<CommonGetResponse<GetPurchaseResponse>> getPurchases(GetPurchaseRequest request, Pageable pageable) {
         ApiResponse<CommonGetResponse<GetPurchaseResponse>> response = new ApiResponse<>();
@@ -148,7 +148,6 @@ public class PurchaseService {
                     throw new CustomResponseException(ErrorCode.MEDICINE_NOT_EXIST);
                 });
                 saveInventory(PurchaseMapper.INSTANCE.toCreateRequest(request), connectedUser, purchase.getMedicine());
-                saveCart(PurchaseMapper.INSTANCE.toCreateRequest(request), connectedUser, purchase.getMedicine());
 
             }
             if (request.supplierId() != null) {
@@ -173,7 +172,6 @@ public class PurchaseService {
         purchaseRepository.findById(purchaseId).ifPresentOrElse(purchaseRepository::delete, () -> {
             throw new CustomResponseException(ErrorCode.PURCHASE_NOT_EXIST);
         });
-
         response.setData(new CommonDeleteResponse(purchaseId));
         return response;
     }

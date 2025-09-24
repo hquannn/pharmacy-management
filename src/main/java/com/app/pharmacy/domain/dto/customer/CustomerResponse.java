@@ -17,10 +17,8 @@ import java.time.LocalDateTime;
 @Builder
 public class CustomerResponse {
     private String id;
-    private String username;
     private String firstName;
     private String lastName;
-    private EmployeeRole role;
     private Integer age;
     private String sex;
     private String phoneNo;

@@ -51,6 +51,7 @@ public class MedicineService  {
     private final PurchaseRepository purchaseRepository;
     private final Clock clock;
 
+
     public ApiResponse<CommonGetResponse<MedicineResponse>> getMedicines(GetMedicineRequest request, Pageable pageable){
         ApiResponse<CommonGetResponse<MedicineResponse>> response = new ApiResponse<>();
 
@@ -153,7 +154,7 @@ public class MedicineService  {
             throw new CustomResponseException(ErrorCode.FILE_PROCESS_ERROR);
         }
     }
-    public ApiResponse<MedicineExtractResponse> processIng(MultipartFile file) {
+    public ApiResponse<MedicineExtractResponse> processImg(MultipartFile file) {
         ApiResponse<MedicineExtractResponse> response = new ApiResponse<>();
         try {
             RestTemplate restTemplate = new RestTemplate();

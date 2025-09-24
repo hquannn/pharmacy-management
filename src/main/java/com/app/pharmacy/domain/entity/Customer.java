@@ -30,10 +30,9 @@ import java.time.LocalDateTime;
 public class Customer {
     @Id
     @Column(name = "C_ID")
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(name = "C_Username")
-    private String username;
     @Column(name = "C_Fname")
     private String firstName;
     @Column(name = "C_Lname")

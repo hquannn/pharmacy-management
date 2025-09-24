@@ -77,7 +77,7 @@ public class MedicineController {
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<ApiResponse<MedicineExtractResponse>> processImage(
             @RequestParam("file") MultipartFile file) {
-        ApiResponse<MedicineExtractResponse> response = medicineService.processIng(file);
+        ApiResponse<MedicineExtractResponse> response = medicineService.processImg(file);
         return ResponseEntity.ok(response);
     }
 }

@@ -1,0 +1,35 @@
+@startuml
+left to right direction
+
+class "ScanUI" <<boundary>> {
+  --
+  +clickScan()
+  +showForm()
+}
+
+class "ScanController" <<control>> {
+  --
+  +sendimgdatda()
+  +getmedicine
+}
+
+class "MiddlewareService" <<control>> {
+  --
+  +extractText()
+  +returnMedicineInfo()
+}
+
+class "MEDICINE" <<entity>> {
+    +txtMedName
+    +txtMedPrice
+    +txtUnit
+    +txtCategory
+    +txtDescription
+    +txtIngredient
+}
+
+ScanUI --> ScanController
+ScanController --> MiddlewareService
+MiddlewareService --> MEDICINE
+MEDICINE --> ScanController
+@enduml

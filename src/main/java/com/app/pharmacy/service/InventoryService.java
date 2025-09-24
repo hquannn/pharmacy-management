@@ -16,9 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.app.pharmacy.specification.InventorySpecification.hasExpireDate;
-import static com.app.pharmacy.specification.InventorySpecification.hasMedicineName;
-import static com.app.pharmacy.specification.InventorySpecification.hasQuantity;
+import static com.app.pharmacy.specification.InventorySpecification.*;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +29,7 @@ public class InventoryService {
                 hasMedicineName(request.medicineName())
                         .and(hasQuantity(request.quantity()))
                         .and(hasExpireDate(request.expireDateBegin(), request.expireDateEnd()))
+                        .and(hasQuantityGreaterThanZero())
         );
         Page<Inventory> inventoryPage = inventoryRepository.findAll(specification, pageable);
         List<InventoryDTO> inventoryDtos = InventoryMapper.INSTANCE.toDtos(inventoryPage.getContent());

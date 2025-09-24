@@ -1,0 +1,113 @@
+@startuml
+left to right direction
+
+entity CUSTOMER {
+  C_ID
+  C_Name
+  C_Email
+  C_Phone
+  C_Sex
+  C_Age
+  created_date
+  updated_date
+}
+
+entity EMPLOYEE {
+  E_ID
+  E_Username
+  E_Password
+  E_Name
+  E_Phone
+  E_Email
+  E_Age
+  E_Bdate
+  created_date
+  updated_date
+}
+
+entity SALE {
+  S_ID
+  S_Time
+  Total_Amt
+  created_date
+  updated_date
+}
+
+entity SALE_ITEM {
+  SI_ID
+  Qty
+  Price
+  created_date
+  updated_date
+}
+
+entity SUPPLIER {
+  Sup_ID
+  Sup_Name
+  Sup_Phone
+  Sup_Addr
+  created_date
+  updated_date
+}
+
+entity PURCHASE {
+  P_ID
+  created_date
+  updated_date
+}
+
+entity MED {
+  Med_ID
+  Med_Name
+  Med_Unit
+  Med_Price
+  created_date
+  updated_date
+}
+
+entity MED_CATEGORY {
+  * Cat_ID
+  Cat_Name
+  Cat_Description
+  created_date
+  updated_date
+}
+
+entity INVENTORY {
+  * I_ID
+  Mfg_Date
+  Exp_Date
+  Qty : INT
+  created_date
+  updated_date
+}
+
+entity LOCATION_RACK {
+  * LR_ID
+  LR_Position
+  created_date
+  updated_date
+}
+
+entity CUSTOMER_POINT_CONFIG {
+  * CPC_ID
+  CPC_Ratio
+  created_date
+  updated_date
+}
+
+' --- Relationships ---
+CUSTOMER ||--o{ SALE
+EMPLOYEE ||--o{ SALE
+
+SALE ||--o{ SALE_ITEM
+SALE_ITEM }o--|| MED
+
+SUPPLIER ||--o{ PURCHASE
+PURCHASE ||--o{ MED
+
+MED ||--o{ INVENTORY
+MED ||--|| MED_CATEGORY
+INVENTORY }o--|| LOCATION_RACK
+
+@enduml

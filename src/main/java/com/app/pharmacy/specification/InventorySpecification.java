@@ -42,4 +42,9 @@ public class InventorySpecification {
             return criteriaBuilder.and(predicates.toArray(predicates.toArray(new Predicate[0])));
         };
     }
+
+    public static Specification<Inventory> hasQuantityGreaterThanZero() {
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.greaterThan(root.get("quantity"), 0);
+    }
 }

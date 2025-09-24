@@ -7,12 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 public record CreateCustomerRequest(
-        @NotBlank(message = "username is mandatory field")
-        String username,
-        @NotNull(message = "role is mandatory field")
-        EmployeeRole role,
-        @NotBlank(message = "password is mandatory field")
-        String password,
+
         @NotBlank(message = "firstName is mandatory field")
         String firstName,
         String lastName,

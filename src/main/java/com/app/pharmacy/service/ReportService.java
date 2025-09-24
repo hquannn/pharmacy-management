@@ -29,31 +29,19 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ReportService {
     private final SaleLogRepository saleLogRepository;
-    private final OrderLogRepository orderLogRepository;
 
     public ApiResponse<ProfitPerDayResponse> getProfitPerDay(ProfitPerDayRequest request) {
         ApiResponse<ProfitPerDayResponse> response = new ApiResponse<>();
         LocalDate date = request.date() != null ? request.date() : LocalDate.now();
         LocalDateTime startOfDay = date.atStartOfDay();
         LocalDateTime endOfDay = date.atTime(23, 59, 59, 999999999);
-        Specification<SaleLog> saleSpec = Specification.where(
+        Specification<SaleLog> specification = Specification.where(
                 SaleSpecification.hasSaleDate(startOfDay, endOfDay));
-        Specification<OrderLog> orderSpec = Specification.where(
-                OrderSpecification.hasOrderDate(startOfDay, endOfDay));
-
-        BigDecimal saleAmount = saleLogRepository.findAll(saleSpec).stream()
-                .map(SaleLog::getTotalAmount)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        BigDecimal orderAmount = orderLogRepository.findAll(orderSpec).stream()
-                .map(OrderLog::getTotalAmount) // or .getAmount(), adjust to your field name
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        BigDecimal totalProfit = saleAmount.add(orderAmount);
-
         ProfitPerDayResponse profitPerDayResponse = ProfitPerDayResponse
                 .builder()
-                .amount(totalProfit)
+                .amount(saleLogRepository.findAll(specification).stream()
+                        .map(SaleLog::getTotalAmount)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add))
                 .build();
 
         response.setData(profitPerDayResponse);

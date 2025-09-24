@@ -20,6 +20,6 @@ public class MultipartInputStreamFileResource extends InputStreamResource {
 
     @Override
     public long contentLength() throws IOException {
-        return -1; // we do not want to be read multiple times
+        return -1; // prevent to be read multiple times
     }
 }

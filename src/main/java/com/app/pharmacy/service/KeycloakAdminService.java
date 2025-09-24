@@ -1,6 +1,6 @@
 package com.app.pharmacy.service;
 
-import com.app.pharmacy.domain.dto.customer.CreateCustomerRequest;
+//import com.app.pharmacy.domain.dto.customer.CreateCustomerRequest;
 import com.app.pharmacy.domain.dto.employee.CreateEmployeeRequest;
 import com.app.pharmacy.exception.CustomResponseException;
 import com.app.pharmacy.exception.ErrorCode;
@@ -155,83 +155,83 @@ public class KeycloakAdminService {
     }
 
     //CUSTOMER
-    public String createCustomer(CreateCustomerRequest request) {
-        UserRepresentation customer = getCustomerRepresentation(request);
-
-        RealmResource realmResource = keycloak.realm(realm);
-        UsersResource usersResource = realmResource.users();
-
-        Response response = usersResource.create(customer);
-
-        if (response.getStatus() == 409) {
-            throw new CustomResponseException(ErrorCode.CUSTOMER_EXISTED);
-        }
-
-        if (response.getStatus() != 201) {
-            throw new RuntimeException("Create customer failed in Keycloak. Status: " + response.getStatus());
-        }
-
-        List<UserRepresentation> customers = usersResource.search(request.username());
-        if (customers.isEmpty()) {
-            throw new RuntimeException("Customer not found in Keycloak after creation");
-        }
-
-        String customerId = customers.get(0).getId();
-        assignRoleToUser(customerId, request.role().toString());
-        return customerId;
-    }
-
-    public void deleteCustomer(String customerId){
-        RealmResource realmResource = keycloak.realm(realm);
-
-        try {
-            realmResource.users().delete(customerId);
-        } catch (NotFoundException ex) {
-            throw new CustomResponseException(ErrorCode.USER_NOT_EXIST);
-        } catch (Exception e) {
-            throw new RuntimeException("User deletion failed", e);
-        }
-    }
-
-    public void resetCustomerPassword(String customerId, String newPassword) {
-        UsersResource usersResource = keycloak.realm(realm).users();
-
-        CredentialRepresentation passwordCred = new CredentialRepresentation();
-        passwordCred.setTemporary(false);
-        passwordCred.setType(CredentialRepresentation.PASSWORD);
-        passwordCred.setValue(newPassword);
-
-        usersResource.get(customerId).resetPassword(passwordCred);
-    }
-
-
-
-    public String getCustomerNameById(String customerId) {
-        RealmResource realmResource = keycloak.realm(realm);
-        try {
-            return realmResource.users().get(customerId).toRepresentation().getUsername();
-        } catch (NotFoundException ex) {
-            throw new CustomResponseException(ErrorCode.USER_NOT_EXIST);
-        } catch (Exception e) {
-            throw new RuntimeException("Get username failed", e);
-        }
-    }
-
-
-
-    private static UserRepresentation getCustomerRepresentation(CreateCustomerRequest request) {
-        UserRepresentation user = new UserRepresentation();
-        user.setUsername(request.username());
-        user.setEmail(request.mail());
-        user.setEnabled(true);
-        user.setEmailVerified(true);
-
-        CredentialRepresentation credential = new CredentialRepresentation();
-        credential.setType(CredentialRepresentation.PASSWORD);
-        credential.setValue(request.password());
-        credential.setTemporary(false);
-
-        user.setCredentials(Collections.singletonList(credential));
-        return user;
-    }
+//    public String createCustomer(CreateCustomerRequest request) {
+//        UserRepresentation customer = getCustomerRepresentation(request);
+//
+//        RealmResource realmResource = keycloak.realm(realm);
+//        UsersResource usersResource = realmResource.users();
+//
+//        Response response = usersResource.create(customer);
+//
+//        if (response.getStatus() == 409) {
+//            throw new CustomResponseException(ErrorCode.CUSTOMER_EXISTED);
+//        }
+//
+//        if (response.getStatus() != 201) {
+//            throw new RuntimeException("Create customer failed in Keycloak. Status: " + response.getStatus());
+//        }
+//
+//        List<UserRepresentation> customers = usersResource.search(request.username());
+//        if (customers.isEmpty()) {
+//            throw new RuntimeException("Customer not found in Keycloak after creation");
+//        }
+//
+//        String customerId = customers.get(0).getId();
+//        assignRoleToUser(customerId, request.role().toString());
+//        return customerId;
+//    }
+//
+//    public void deleteCustomer(String customerId){
+//        RealmResource realmResource = keycloak.realm(realm);
+//
+//        try {
+//            realmResource.users().delete(customerId);
+//        } catch (NotFoundException ex) {
+//            throw new CustomResponseException(ErrorCode.USER_NOT_EXIST);
+//        } catch (Exception e) {
+//            throw new RuntimeException("User deletion failed", e);
+//        }
+//    }
+//
+//    public void resetCustomerPassword(String customerId, String newPassword) {
+//        UsersResource usersResource = keycloak.realm(realm).users();
+//
+//        CredentialRepresentation passwordCred = new CredentialRepresentation();
+//        passwordCred.setTemporary(false);
+//        passwordCred.setType(CredentialRepresentation.PASSWORD);
+//        passwordCred.setValue(newPassword);
+//
+//        usersResource.get(customerId).resetPassword(passwordCred);
+//    }
+//
+//
+//
+//    public String getCustomerNameById(String customerId) {
+//        RealmResource realmResource = keycloak.realm(realm);
+//        try {
+//            return realmResource.users().get(customerId).toRepresentation().getUsername();
+//        } catch (NotFoundException ex) {
+//            throw new CustomResponseException(ErrorCode.USER_NOT_EXIST);
+//        } catch (Exception e) {
+//            throw new RuntimeException("Get username failed", e);
+//        }
+//    }
+//
+//
+//
+//    private static UserRepresentation getCustomerRepresentation(CreateCustomerRequest request) {
+//        UserRepresentation user = new UserRepresentation();
+//        user.setUsername(request.username());
+//        user.setEmail(request.mail());
+//        user.setEnabled(true);
+//        user.setEmailVerified(true);
+//
+//        CredentialRepresentation credential = new CredentialRepresentation();
+//        credential.setType(CredentialRepresentation.PASSWORD);
+//        credential.setValue(request.password());
+//        credential.setTemporary(false);
+//
+//        user.setCredentials(Collections.singletonList(credential));
+//        return user;
+//    }
 }

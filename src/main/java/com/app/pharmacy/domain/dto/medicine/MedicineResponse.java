@@ -19,6 +19,8 @@ public class MedicineResponse {
     private BigDecimal price;
     private MedicineCategoryResponse category;
     private MedUnitResponse unit;
+    private String ingredients;
+    private String description;
 
     private LocalDateTime createdDate;
     private String createdBy;

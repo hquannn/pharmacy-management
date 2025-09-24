@@ -15,6 +15,8 @@ public record CreateMedicineRequest(
         @NotBlank(message = "categoryId is mandatory field")
         String categoryId,
         @NotBlank(message = "medicineUnitId is mandatory field")
-        String medicineUnitId
+        String medicineUnitId,
+        String ingredients,
+        String description
 ) {
 }
